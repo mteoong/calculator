@@ -157,6 +157,40 @@ for (i = 0; i < 10; i++) {
     number.addEventListener('click', createFunction(i));
 }
 
+document.addEventListener('keydown', keyFunction);
+
+function keyFunction(e) {
+    switch(e.key) {
+        case "+":
+            calculator("sum");
+            break;
+        case "-":
+            calculator("dif");
+            break;
+        case "/":
+            calculator("div");
+            break;
+        case "*":
+            calculator("mul");
+            break;
+        case "Enter":
+            calculator("equals");
+            break;
+        case "=":
+            calculator("equals");
+            break;
+        case "C":
+            calculator("C");
+            break;
+        default:
+            if(!isNaN(parseInt(e.key))) {
+                calculator(e.key); 
+            } else {
+                break;
+            }
+    }    
+}
+
 function createFunction(i) {
     return () => calculator(i);
 }
