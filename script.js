@@ -104,7 +104,7 @@ function convertScientific(num, type) {
 }
 
 function missingNumber(choice) {
-    error.innerText = `You must have a number before applying an operation`;
+    error.innerText = `ERROR: You must input a number before applying an operation`;
     error.classList.add("errorShow");
 }
 
