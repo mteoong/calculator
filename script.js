@@ -4,6 +4,7 @@ let operators = [];
 let pressedEquals = false;
 
 function calculator(input) {
+    error.classList.remove("errorShow");
     if(isNaN(parseInt(input))) {
         pressedEquals = false;
         if (input === "dot") {
@@ -56,10 +57,55 @@ function calculator(input) {
         numbers[numbersIndex] += input;
         screen.innerText = numbers[numbersIndex];
     }
+
+    let curr = parseFloat(screen.innerText);
+
+    if (curr > 9999999999) {
+        screen.innerText = convertScientific(curr, "big");
+    } else if (curr < -9999999999) {
+        screen.innerText = convertScientific(curr, "small");
+    } else if (screen.innerText.length > 10 && curr > 0 && curr < 1) {
+        screen.innerText = convertScientific(curr, "posDec");
+    } else if (screen.innerText.length > 10 && curr < 0 && curr > -1) {
+        screen.innerText = convertScientific(curr, "negDec");
+    } else if (screen.innerText.length > 10) {
+        screen.innerText = screen.innerText.slice(0, 11);
+    }
+}
+
+function convertScientific(num, type) {
+    let e = 0;
+    switch(type) {
+        case "big":
+            while (num > 10) {
+                num /= 10.0;
+                e += 1;
+            }
+            return num.toFixed(5) + `e${e}`;
+        case "small":
+            while (num < -10) {
+                num /= 10.0;
+                e += 1;
+            }
+            return num.toFixed(4) + `e${e}`;
+        case "posDec":
+            while (num < 1) {
+                num *= 10.0;
+                e -= 1;
+            }
+            return num.toFixed(4) + `e${e}`;
+        case "negDec":
+            while (num > -1) {
+                num *= 10.0;
+                e -= 1;
+            }
+            return num.toFixed(3) + `e${e}`;
+    }
 }
 
 function missingNumber(choice) {
-    console.log(`You must have a number before choosing ${choice}`);
+    error.innerText = `You must have a number before applying an operation`;
+    error.classList.add("errorShow");
 }
 
 function calculate(arg1, arg2, operation) {
@@ -77,7 +123,11 @@ function calculate(arg1, arg2, operation) {
         case "exp":
             return arg1 ** arg2;
         case "div":
-            return arg1 / arg2;
+            if (arg2  == 0) {
+                divideByZeroError();
+            } else {
+                return arg1 / arg2;
+            }
         case "mul":
             return arg1 * arg2;
         case "sum":
@@ -87,6 +137,15 @@ function calculate(arg1, arg2, operation) {
         default:
             break;              
     }
+}
+
+function divideByZeroError() {
+    error.innerText = `Cannot divide by zero`;
+    error.classList.add("errorShow");
+    numbersIndex = 0;
+    numbers = [""];
+    operators = [];
+    screen.innerText = numbers[numbersIndex];
 }
 
 /* Setting Event Listeners*/
@@ -103,31 +162,33 @@ function createFunction(i) {
 }
 
 const AC = document.querySelector("#AC");
-AC.addEventListener('click', createFunction("AC"))
+AC.addEventListener('click', createFunction("AC"));
 
 const C = document.querySelector("#C");
-C.addEventListener('click', createFunction("C"))
+C.addEventListener('click', createFunction("C"));
 
 const exp = document.querySelector("#exp");
-exp.addEventListener('click', createFunction("exp"))
+exp.addEventListener('click', createFunction("exp"));
 
 const div = document.querySelector("#div");
-div.addEventListener('click', createFunction("div"))
+div.addEventListener('click', createFunction("div"));
 
 const mul = document.querySelector("#mul");
-mul.addEventListener('click', createFunction("mul"))
+mul.addEventListener('click', createFunction("mul"));
 
 const sum = document.querySelector("#sum");
-sum.addEventListener('click', createFunction("sum"))
+sum.addEventListener('click', createFunction("sum"));
 
 const dif = document.querySelector("#dif");
-dif.addEventListener('click', createFunction("dif"))
+dif.addEventListener('click', createFunction("dif"));
 
 const neg = document.querySelector("#neg");
-neg.addEventListener('click', createFunction("neg"))
+neg.addEventListener('click', createFunction("neg"));
 
 const dot = document.querySelector("#dot");
-dot.addEventListener('click', createFunction("dot"))
+dot.addEventListener('click', createFunction("dot"));
 
 const equals = document.querySelector("#equals");
-equals.addEventListener('click', createFunction("equals"))
+equals.addEventListener('click', createFunction("equals"));
+
+const error = document.querySelector("#errors");

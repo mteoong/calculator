@@ -87,9 +87,13 @@ button:hover {
     color: black;
     text-align: center;
     padding-top: 25px; 
-    font-size: 35px;
+    font-size: 30px;
     color: red;
     opacity: 0%;
+}
+
+#errors.errorShow {
+    opacity: 100%;
 }
 
 #errors.isError {
